@@ -221,17 +221,16 @@ body {
     
 ?>
  <?php
-    //入力された月の支出入を出力
     if(!empty($_POST["month"])){
         $month = explode("-",$_POST["month"]);
         $moneymonth = 0;
-        $f = 0;
-        $fin = 0;
-        if(!$count == 0){
+        $f=0;
+        $fin=0;
+        if(!$count==0){
             if(in_array($month[1],$cc)){//$ccの中に$monthがあった場合
                 $key = array_keys($cc,$month[1]);//$ccの中の$monthを全部抽出
                 $f = count($key);//$keyの数を数える
-                for($j = 0;$j<$f;$j++){
+                for($j=0;$j<$f;$j++){
                     $day[] = $c[$key[$j]];//日付取得
                     $arraymonth[] = $array[$key[$j]];
                     $moneymonth += $array[$key[$j]];
@@ -240,7 +239,7 @@ body {
                 $jymonth = json_encode($arraymonth, JSON_UNESCAPED_UNICODE);
             }
         }
-        if(!$countin == 0){
+        if(!$countin==0){
             if(in_array($month[1],$inm)){//$ccの中に$monthがあった場合
                 $key = array_keys($inm,$month[1]);//$ccの中の$monthを全部抽出
                 $fin = count($key);//$keyの数を数える
@@ -253,14 +252,34 @@ body {
                 $jymonthin = json_encode($arraymonthin, JSON_UNESCAPED_UNICODE);
             }
         }
-        if($count == 0 and $countin == 0){
-            echo "<br>".$month[1]."月の支出入はありません。";
-        }
         if(!empty($moneymonth)){
             $monthaverage = $moneymonth / ($f + $fin);
-            $monthsim =$monthaverage*31;
-            echo "<br>"."$month[1]"."月の現在の合計金額"."$moneymonth"."円";
-            echo "<br>"."$month[1]"."月の合計金額予想"."$monthsim"."円";
+            $maxd = max(max($day),max($dayin));
+            $maxday = explode("-",$maxd);
+            echo $maxday[2];
+            if($month == 1 or $month == 3 or $month == 5 or $month == 7 or $month == 8 or $month == 10 or $month == 12){
+                $monthsim = $monthaverage*31;
+                $monthsim2 = (31-$maxday[2])*$monthaverage;
+                echo "<br>"."$month[1]"."月の現在の合計金額"."$moneymonth"."円";
+                echo "<br>"."$month[1]"."月の合計金額予想"."$monthsim"."円";
+                echo "<br>"."$month[1]"."月の今後の使用金額予想"."$monthsim2"."円";
+            }
+            elseif($month == 2){
+                $monthsim = $monthaverage*28;
+                $monthsim2 = (28-$maxday[2])*$monthaverage;
+                echo "<br>"."$month[1]"."月の現在の合計金額"."$moneymonth"."円";
+                echo "<br>"."$month[1]"."月の合計金額予想"."$monthsim"."円";
+                echo "<br>"."$month[1]"."月の今後の使用金額予想"."$monthsim2"."円";
+            }else{
+                $monthsim = $monthaverage*30;
+                $monthsim2 = (30-$maxday[2])*$monthaverage;
+                echo "<br>"."$month[1]"."月の現在の合計金額"."$moneymonth"."円";
+                echo "<br>"."$month[1]"."月の合計金額予想"."$monthsim"."円";
+                echo "<br>"."$month[1]"."月の今後の使用金額予想"."$monthsim2"."円";
+            }
+        }
+        if($count==0 and $countin==0){
+            echo "<br>".$month[1]."月の支出入はありません。";
         }
     }
 ?>
